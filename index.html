@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>林占梅與〈地震歌有序〉互動學習網</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #fcfaf2; /* 古典米黃色 */
+            color: #2d3748;
+        }
+        .serif {
+            font-family: 'Noto Serif TC', serif;
+        }
+        .tab-active {
+            border-bottom: 4px solid #854d0e; /* 棕褐色 */
+            color: #854d0e;
+            font-weight: 700;
+        }
+        .tab-inactive {
+            color: #718096;
+            border-bottom: 4px solid transparent;
+        }
+        .tab-inactive:hover {
+            color: #2d3748;
+            border-bottom: 4px solid #e2e8f0;
+        }
+        .poem-line {
+            font-size: 1.35rem;
+            line-height: 2.2;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.5rem;
+            color: #1a202c;
+        }
+        .translation-text {
+            line-height: 1.8;
+            color: #4a5568;
+            font-size: 1rem;
+            text-align: justify;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 2px dotted #c05621;
+            cursor: help;
+            color: #c05621;
+            font-weight: 500;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 240px;
+            background-color: #2d3748;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 12px;
+            position: absolute;
+            z-index: 20;
+            bottom: 140%;
+            left: 50%;
+            margin-left: -120px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+            font-weight: normal;
+            line-height: 1.5;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+        }
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #2d3748 transparent transparent transparent;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        .hidden-content {
+            display: none;
+        }
+        .analysis-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-right: 6px;
+        }
+        .tag-rhetoric { background-color: #fce7f3; color: #be185d; }
+        .tag-structure { background-color: #e0e7ff; color: #4338ca; }
+        .tag-content { background-color: #d1fae5; color: #047857; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center">
+                    <div class="bg-gray-800 text-white p-2 rounded-lg mr-4">
+                        <i class="fa-solid fa-feather text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl md:text-2xl font-bold tracking-tighter text-gray-800 serif">林占梅與〈地震歌〉文本解讀</h1>
+                        <p class="text-xs text-gray-500 font-medium">數位互動學習講義</p>
+                    </div>
+                </div>
+                <nav class="hidden md:flex space-x-6">
+                    <button onclick="switchTab('author')" id="nav-author" class="tab-active px-2 py-6 text-sm transition-all duration-200">詩人與背景</button>
+                    <button onclick="switchTab('poem')" id="nav-poem" class="tab-inactive px-2 py-6 text-sm transition-all duration-200">文本深讀</button>
+                    <button onclick="switchTab('quiz')" id="nav-quiz" class="tab-inactive px-2 py-6 text-sm transition-all duration-200">測驗與討論</button>
+                </nav>
+                <div class="md:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-gray-600 focus:outline-none">
+                        <i class="fa-solid fa-bars-staggered text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Nav -->
+        <div id="mobile-menu" class="hidden bg-white border-t border-gray-100 shadow-xl">
+            <button onclick="switchTab('author'); toggleMobileMenu()" class="block w-full text-left px-6 py-4 border-b hover:bg-gray-50">詩人與背景</button>
+            <button onclick="switchTab('poem'); toggleMobileMenu()" class="block w-full text-left px-6 py-4 border-b hover:bg-gray-50">文本深讀</button>
+            <button onclick="switchTab('quiz'); toggleMobileMenu()" class="block w-full text-left px-6 py-4 border-b hover:bg-gray-50">測驗與討論</button>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-10 max-w-6xl">
+        
+        <!-- SECTION 1: 詩人與背景 -->
+        <div id="content-author" class="space-y-12 animate-fade-in">
+            <!-- Author Profile -->
+            <section class="grid md:grid-cols-12 gap-8 items-start">
+                <div class="md:col-span-4 sticky top-24">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-xl border border-gray-100">
+                        <div class="bg-gray-800 h-32 flex items-end justify-center pb-4">
+                            <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-white translate-y-8">
+                                <i class="fa-solid fa-user-tie text-4xl text-gray-400"></i>
+                            </div>
+                        </div>
+                        <div class="pt-12 pb-8 px-6 text-center">
+                            <h2 class="text-2xl font-bold serif text-gray-800">林占梅</h2>
+                            <p class="text-sm text-gray-500 mb-4">(1821-1868)</p>
+                            <div class="flex justify-center gap-2 mb-6">
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">字雪村</span>
+                                <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">號鶴山</span>
+                                <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">潛園主人</span>
+                            </div>
+                            <div class="text-left text-sm space-y-3 text-gray-600 bg-gray-50 p-4 rounded-xl">
+                                <p><i class="fa-solid fa-location-dot mr-2 text-gray-400"></i>籍貫：福建泉州同安，後居淡水廳</p>
+                                <p><i class="fa-solid fa-music mr-2 text-gray-400"></i>專長：琴、棋、書、畫、詩</p>
+                                <p><i class="fa-solid fa-book mr-2 text-gray-400"></i>著作：《潛園琴餘草》</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-8 space-y-10">
+                    <!-- Poem Style -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                        <h3 class="text-xl font-bold mb-6 border-l-4 border-orange-700 pl-4 serif">詩作風格與評價</h3>
+                        <div class="prose max-w-none text-gray-700 leading-relaxed">
+                            <p class="mb-4">林占梅詩學<span class="highlight-text">香山（白居易）</span>、<span class="highlight-text">劍南（陸游）</span>，擅長於描景寫情，風格多樣。</p>
+                            <div class="grid md:grid-cols-2 gap-4 my-6">
+                                <div class="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-400">
+                                    <p class="text-sm font-bold text-orange-900 mb-1">臺澎道 徐宗幹 評語：</p>
+                                    <p class="italic">「和靜清遠、古澹恬逸」</p>
+                                </div>
+                                <div class="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-400">
+                                    <p class="text-sm font-bold text-orange-900 mb-1">獨特評價：</p>
+                                    <p class="italic">「詩味多琴味」</p>
+                                </div>
+                            </div>
+                            <p>其作品收錄於《潛園琴餘草》，時間跨度達二十年（1847-1867），詩作超過兩千首，反映了從清領時期的優渥生活到後期家國變遷的心境轉向。</p>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Periods -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                        <h3 class="text-xl font-bold mb-6 border-l-4 border-gray-800 pl-4 serif">詩作三階段</h3>
+                        <div class="space-y-6">
+                            <div class="flex gap-4">
+                                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600">早</div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800">早期 (1847-1850) <span class="text-xs font-normal text-gray-400 ml-2">約70餘首</span></h4>
+                                    <p class="text-sm text-gray-600">展現文華光彩。代表作包含〈地震歌〉(1850)。</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-green-100 flex items-center justify-center font-bold text-green-600">中</div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800">中期 (1851-1861) <span class="text-xs font-normal text-gray-400 ml-2">作品最豐</span></h4>
+                                    <p class="text-sm text-gray-600">生活經歷豐富多彩，翰藻華辭，氣象萬千，展現詩人的藝術巔峰。</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center font-bold text-purple-600">晚</div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800">晚期 (1862-1868) <span class="text-xs font-normal text-gray-400 ml-2">遞減中顯內斂</span></h4>
+                                    <p class="text-sm text-gray-600">生活由繁華轉趨消沈，作品減少，風格更顯內斂雋永。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Earthquake Poetry Context -->
+            <section class="bg-slate-800 rounded-3xl p-8 md:p-12 text-white">
+                <div class="max-w-4xl mx-auto">
+                    <h3 class="text-2xl font-bold mb-8 text-center serif"><i class="fa-solid fa-landmark mr-3"></i>關於「地震詩」的歷史</h3>
+                    <div class="mb-10 bg-slate-700/50 p-6 rounded-xl border-l-4 border-orange-400">
+                        <h4 class="text-orange-300 font-bold mb-2">定義與價值</h4>
+                        <p class="opacity-90 leading-relaxed text-sm md:text-base">
+                            「地震詩」是歷史文獻的一部份，藉由親身經歷地震的文人，以其文筆將地震當時的客觀情景，寫下發自肺腑的主觀詠歎。具有可讀性與傳誦性，兼具文學與史料價值。
+                        </p>
+                    </div>
+
+                    <h4 class="text-xl font-bold mb-6 text-center text-orange-200">臺灣古典詩中最早出現的「地震」</h4>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <!-- Type 1 -->
+                        <div class="bg-slate-700 p-5 rounded-xl hover:bg-slate-600 transition duration-300">
+                            <div class="text-orange-400 text-xs font-bold mb-2 uppercase tracking-wider">Type 01</div>
+                            <h5 class="font-bold text-lg mb-2">以「詩中自註」提及</h5>
+                            <p class="text-sm font-semibold mb-1">孫元衡〈暑中書事〉</p>
+                            <p class="text-xs text-slate-300 italic mb-3">「地能簸蕩沙能沸 (歲屢地震)，風最顛狂雨最慳」</p>
+                            <hr class="border-slate-600 my-3">
+                            <div class="text-xs text-slate-400 leading-relaxed space-y-2">
+                                <p><strong>生平簡介：</strong></p>
+                                <ul class="list-disc pl-3">
+                                    <li>康熙42年(1703) 任台灣府海防補盜同知。</li>
+                                    <li>康熙45年 代理諸羅縣知縣。</li>
+                                    <li>康熙46年 改任台灣府台灣縣知縣。</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Type 2 -->
+                        <div class="bg-slate-700 p-5 rounded-xl hover:bg-slate-600 transition duration-300">
+                            <div class="text-orange-400 text-xs font-bold mb-2 uppercase tracking-wider">Type 02</div>
+                            <h5 class="font-bold text-lg mb-2">最早以「地震」入詩</h5>
+                            <p class="text-sm font-semibold mb-1">陳夢林〈鹿耳門即事〉</p>
+                            <p class="text-xs text-slate-300 italic mb-3">「地震民訛桐不華，處堂燕雀自喧嘩」</p>
+                            <hr class="border-slate-600 my-3">
+                            <div class="text-xs text-slate-400 leading-relaxed space-y-2">
+                                <p><strong>陳夢林 (1664-1739)：</strong></p>
+                                <ul class="list-disc pl-3">
+                                    <li>字少林，福建漳州人。</li>
+                                    <li>與周鍾瑄、阮蔡文並稱「諸羅三賢」。</li>
+                                    <li>人稱「漳之奇男子」。</li>
+                                    <li>號「他齋先生」。</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Type 3 -->
+                        <div class="bg-slate-700 p-5 rounded-xl ring-2 ring-orange-500/50 hover:bg-slate-600 transition duration-300">
+                            <div class="text-orange-400 text-xs font-bold mb-2 uppercase tracking-wider">Type 03</div>
+                            <h5 class="font-bold text-lg mb-2">真正以地震為主題</h5>
+                            <ul class="text-sm font-semibold space-y-2 mb-3">
+                                <li class="flex items-center"><i class="fa-solid fa-pen-nib text-orange-500 text-xs mr-2"></i>鄭用鑑〈地震行〉</li>
+                                <li class="flex items-center"><i class="fa-solid fa-pen-nib text-orange-500 text-xs mr-2"></i>林占梅〈地震歌有序〉</li>
+                            </ul>
+                            <hr class="border-slate-600 my-3">
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                此類作品正式以「地震」為主題進行創作，詳細描寫災變過程、客觀情景與個人的心理感受，具有完整的敘事結構。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- SECTION 2: 文本深讀 (Full Content Refactored) -->
+        <div id="content-poem" class="hidden-content space-y-12 animate-fade-in">
+            
+            <!-- Intro -->
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-8 items-center">
+                <div class="bg-gray-100 p-4 rounded-2xl w-full md:w-auto text-center">
+                    <span class="text-4xl font-bold text-gray-800 serif">解題</span>
+                </div>
+                <div class="text-gray-600 text-sm md:text-base">
+                    <ul class="grid md:grid-cols-2 gap-x-12 gap-y-2">
+                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i>體裁：<span class="font-bold">七言古詩</span> (共24聯)</li>
+                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i>時間：道光30年 (1850) 三月初八</li>
+                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i>功能：記事、寫作技巧、災難關懷</li>
+                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i>地位：台灣災難文學之典型</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 1. 詩序 (Preface) -->
+            <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+                <div class="bg-gray-800 text-white px-8 py-4 font-bold flex items-center justify-between">
+                    <span>【詩序】 寫作的背景</span>
+                </div>
+                <div class="p-8 space-y-8">
+                    <!-- Original Text -->
+                    <div class="serif text-xl leading-relaxed text-gray-800 bg-gray-50 p-6 rounded-xl border-l-4 border-gray-400">
+                        道光戊申<span class="tooltip">仲冬<span class="tooltiptext">農曆十一月。</span></span>，臺地大震。吾淡幸全；而嘉彰一帶城屋傾圮，人畜喪斃，至折肢破額者，又不可勝計矣。傷心慘目，殊難名狀。今歲暮春，復大震二次，驚悼之餘，乃成七古一篇，歌以當哭，時三月初八日<span class="tooltip">未刻<span class="tooltiptext">即今之 13 時至 15 時。</span></span>也。
+                    </div>
+
+                    <!-- Modern Translation -->
+                    <div>
+                        <h4 class="font-bold text-gray-700 mb-2 border-b inline-block border-gray-300">白話解讀</h4>
+                        <div class="translation-text">
+                            <p class="mb-2">道光年間，戊申年的仲冬時節，臺灣發生了大地震。我所在的淡水地區僥倖安然無恙，但嘉義、彰化一帶的城鎮房屋卻大多倒塌，許多人和牲畜喪生，至於肢體斷裂、頭破血流的傷者，更是數不勝數。這樣的悲慘景象，實在難以用言語形容。</p>
+                            <p>到了今年暮春，又發生了兩次大地震。在驚恐與哀悼之餘，我寫下了一首七言古詩，以此寄託悲痛。當時正是三月初八日下午未時。</p>
+                        </div>
+                    </div>
+
+                    <!-- Analysis -->
+                    <div class="bg-blue-50 p-6 rounded-xl text-sm text-blue-900">
+                        <h4 class="font-bold mb-2"><i class="fa-solid fa-magnifying-glass mr-2"></i>歷史補充</h4>
+                        <p>臺灣清代地震的記載多刊載於地方志書上，最早經歷的年代，從康熙二十五年(1686)到光緒二十年(1894)為止，能見於史書記載的地震頻率平均是 4.8 年一次。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. 第一段: 地震的突發 -->
+            <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+                <div class="bg-teal-600 text-white px-8 py-4 font-bold flex items-center justify-between">
+                    <span>【一】 地震的突發</span>
+                </div>
+                <div class="p-8 space-y-8">
+                    <!-- Original -->
+                    <div class="serif text-center md:text-left">
+                        <div class="poem-line">天朗氣清日<span class="tooltip">亭午<span class="tooltiptext">正午。</span></span>，閒吟散食步<span class="tooltip">廊廡<span class="tooltiptext">堂前東西兩側的廂房。廊無壁，僅作通道；廡則有壁，可以住人。</span></span>。</div>
+                        <div class="poem-line">耳根彷彿隱雷鳴，又似波濤風激怒。</div>
+                        <div class="poem-line">濤聲乍過心猶疑，忽<span class="tooltip">詫<span class="tooltiptext">驚訝。</span></span>棟樑能動移。</div>
+                    </div>
+
+                    <!-- Translation -->
+                    <div>
+                        <h4 class="font-bold text-gray-700 mb-2 border-b inline-block border-gray-300">白話解讀</h4>
+                        <div class="translation-text">
+                            <p>天氣晴朗，空氣清新，正是中午時分。我悠閒地吟詩消食，在長廊下散步。</p>
+                            <p>忽然間，耳邊隱隱傳來像雷鳴般的聲音，又好像狂風激起的波濤洶湧。</p>
+                            <p>浪濤般的聲響剛剛掠過，我還在疑惑是什麼聲音，突然驚訝地發現，屋樑竟然開始晃動起來！</p>
+                        </div>
+                    </div>
+
+                    <!-- Analysis Grid -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="bg-gray-50 p-5 rounded-lg">
+                            <h5 class="font-bold text-gray-800 mb-3"><span class="analysis-tag tag-content">賞析</span>情境解析</h5>
+                            <p class="text-sm text-gray-600 leading-relaxed">詩人剛吃過午飯，散步閒吟於兩側廂房的廊道上。耳朵突然聽到怒濤般的雷鳴，更驚訝的是棟樑開始移動，才察覺發生地震了。</p>
+                        </div>
+                        <div class="bg-gray-50 p-5 rounded-lg">
+                            <h5 class="font-bold text-gray-800 mb-3"><span class="analysis-tag tag-structure">章法</span>寫作技巧</h5>
+                            <ul class="text-sm text-gray-600 space-y-2">
+                                <li><strong>起頭二句故作悠閒：</strong>以「閒」襯「忙」，營造對比。</li>
+                                <li><strong>隨聽覺而起疑：</strong>從視覺（日亭午）轉向聽覺（隱雷鳴），再到觸覺/視覺（棟樑移），層次分明。</li>
+                            </ul>
+                            <div class="mt-3 pt-3 border-t border-gray-200">
+                                <span class="analysis-tag tag-rhetoric">修辭</span> 譬喻：「雷鳴」、「波濤」
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. 第二段: 地震的情形 -->
+            <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+                <div class="bg-red-600 text-white px-8 py-4 font-bold flex items-center justify-between">
+                    <span>【二】 地震的情形</span>
+                </div>
+                <div class="p-8 space-y-8">
+                    <!-- Original -->
+                    <div class="serif text-center md:text-left">
+                        <div class="poem-line">頃刻金<span class="tooltip">甑<span class="tooltiptext">ㄗㄥˋ，古代炊煮器名。</span></span>相傾碎，<span class="tooltip">霎時<span class="tooltiptext">短促的。</span></span>身體若籠<span class="tooltip">篩<span class="tooltiptext">篩子。身體搖晃的樣子。</span></span>。</div>
+                        <div class="poem-line">廄馬嘶<span class="tooltip">蹶<span class="tooltiptext">ㄐㄩㄝˊ，跌倒。</span></span>犬狂吠，智者<span class="tooltip">猝然<span class="tooltiptext">突然地，出乎意料。</span></span>亦愚昧。</div>
+                        <div class="poem-line">悲風<span class="tooltip">慘慘<span class="tooltiptext">昏暗的樣子。</span></span>日無光，霎爾晴空成晝晦。</div>
+                        <div class="poem-line">扶老攜幼出門走，忙忙真似喪家狗。</div>
+                        <div class="poem-line">更有樓居最動搖，欲下不得心急焦。</div>
+                        <div class="poem-line">心急勢危肝膽碎，失足一墮魂難招。</div>
+                    </div>
+
+                    <!-- Translation -->
+                    <div>
+                        <h4 class="font-bold text-gray-700 mb-2 border-b inline-block border-gray-300">白話解讀</h4>
+                        <div class="translation-text">
+                            <p>轉眼之間，銅製的炊具相互碰撞傾倒，瞬間碎裂四散；我的身體也像置身在篩網中一般劇烈搖晃不止。</p>
+                            <p>馬廄裡的馬兒驚恐地嘶鳴跳躍，狗兒瘋狂地吠叫，連平日聰明冷靜的人，此刻也驚惶失措，變得手足無措。</p>
+                            <p>淒厲的狂風呼嘯，大地一片悲鳴，太陽的光輝仿彿被吞沒，剎那間，原本晴朗的天空變得昏暗無比，宛如白晝突然陷入黑夜。</p>
+                            <p>人們攙扶著年邁的長輩，牽著年幼的孩童，慌亂地衝出家門，四處奔逃，模樣狼狽，活像失去主人的流浪狗。</p>
+                            <p>更可怕的是，那些住在樓房裡的人，感受到劇烈的晃動，卻因樓層過高而無法迅速逃離，只能心急如焚。但越是著急，情勢就越加危險，內心恐懼到肝膽欲裂。若是一腳踩空跌落，恐怕就再也無法挽回性命了！</p>
+                        </div>
+                    </div>
+
+                    <!-- Analysis Grid -->
+                    <div class="bg-gray-50 p-5 rounded-lg">
+                        <h5 class="font-bold text-gray-800 mb-3"><span class="analysis-tag tag-structure">章法</span>蒙太奇式效果</h5>
+                        <p class="text-sm text-gray-600 mb-4">以「頃刻」二字快速轉換情境，揭開一幕幕動盪的場景與驚悚的心境。首段兩句的悠閒，與本段的焦急，塑造出蒙太奇式的視覺衝擊。</p>
+                        
+                        <div class="border-t border-gray-200 pt-3">
+                            <h5 class="font-bold text-gray-800 mb-2"><span class="analysis-tag tag-rhetoric">修辭</span>重點修辭</h5>
+                            <ul class="text-sm text-gray-600 grid grid-cols-2 gap-2">
+                                <li><strong>映襯：</strong>智者 — 愚昧</li>
+                                <li><strong>映襯：</strong>無光 — 晴空</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Question -->
+                    <div class="bg-amber-50 p-5 rounded-lg border border-amber-100">
+                        <h5 class="font-bold text-amber-800 mb-3"><i class="fa-solid fa-circle-question mr-2"></i>問題思考：請挑出本段運用哪些摹寫技巧？</h5>
+                        <details class="group">
+                            <summary class="cursor-pointer text-amber-600 text-sm font-bold hover:text-amber-800 transition">點擊查看答案</summary>
+                            <div class="mt-3 text-sm text-gray-700 space-y-2 pl-4 border-l-2 border-amber-300">
+                                <p><strong>視覺：</strong>金甑傾碎、日無光、晴空成晝晦。</p>
+                                <p><strong>聽覺：</strong>廄馬嘶、犬狂吠、悲風慘慘。</p>
+                                <p><strong>觸覺：</strong>身體若籠篩。</p>
+                                <p><strong>知覺：</strong>心急焦、肝膽碎。</p>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. 第三段: 焦躁的心情 -->
+            <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+                <div class="bg-orange-600 text-white px-8 py-4 font-bold flex items-center justify-between">
+                    <span>【三】 震災中人們焦躁的心情</span>
+                </div>
+                <div class="p-8 space-y-8">
+                    <!-- Original -->
+                    <div class="serif text-center md:text-left">
+                        <div class="poem-line">蟻走熱鍋方寸亂，兩腳<span class="tooltip">圈豚<span class="tooltiptext">徐步趨行貌。形容像受繩牽絆的豬隻，腳軟而動彈不得。</span></span>繩索絆。</div>
+                        <div class="poem-line">窘逼轉愁門戶狹，攀援不覺<span class="tooltip">窗櫺<span class="tooltiptext">ㄔㄨㄤ ㄌㄧㄥˊ，窗上以木條交錯製成的格子。</span></span>斷。</div>
+                        <div class="poem-line">如逢虎狼如觸蝎，形神<span class="tooltip">惝恍<span class="tooltiptext">ㄔㄤˇ ㄏㄨㄤˇ，迷糊不清的樣子。</span></span>魂飛越。</div>
+                        <div class="poem-line">偷眼視之但溟茫，滿耳聲聞唯<span class="tooltip">窸窣<span class="tooltiptext">ㄒㄧ ㄙㄨˋ，形容細碎而斷續的摩擦聲。</span></span>。</div>
+                        <div class="poem-line">千家萬家齊<span class="tooltip">屏息<span class="tooltiptext">抑止呼吸，止住聲息。</span></span>，大兒小兒多<span class="tooltip">避匿<span class="tooltiptext">躲避、隱匿。</span></span>。</div>
+                    </div>
+
+                    <!-- Translation -->
+                    <div>
+                        <h4 class="font-bold text-gray-700 mb-2 border-b inline-block border-gray-300">白話解讀</h4>
+                        <div class="translation-text">
+                            <p>人們像熱鍋上的螞蟻般驚慌失措，內心惶亂無比；雙腳就像被繩索絆住的豬隻般，步履艱難，難以逃脫。</p>
+                            <p>越是驚恐，越覺得家門狹窄，無路可逃；情急之下，攀爬窗櫺尋找出口，卻不小心把窗櫺扯斷。</p>
+                            <p>這種驚駭，就像突然遇上猛虎和餓狼，又像誤踩毒蠍，渾身顫抖，心神恍惚，彷彿靈魂都要飛離身體。</p>
+                            <p>偷偷環顧四周，卻只見天地昏暗不明，視線模糊一片；耳邊所聽到的，也只有低沉雜亂的碎響聲，充滿壓抑與恐懼。</p>
+                            <p>千家萬戶的人們都屏住呼吸，不敢發出聲音，大人小孩紛紛找地方躲藏，唯恐被這場災難吞噬。</p>
+                        </div>
+                    </div>
+
+                    <!-- Analysis -->
+                    <div class="bg-gray-50 p-5 rounded-lg">
+                        <h5 class="font-bold text-gray-800 mb-3"><span class="analysis-tag tag-structure">章法</span>譬喻的張力</h5>
+                        <p class="text-sm text-gray-600">大量的譬喻使外物與自身、抽象與具體、平常與異常之間交互轉化，提升了文字的張力與強度。</p>
+                    </div>
+
+                    <!-- Interactive Question -->
+                    <div class="bg-amber-50 p-5 rounded-lg border border-amber-100">
+                        <h5 class="font-bold text-amber-800 mb-3"><i class="fa-solid fa-circle-question mr-2"></i>問題思考：請挑出本段有那些詞句運用譬喻的修辭技巧？</h5>
+                        <details class="group">
+                            <summary class="cursor-pointer text-amber-600 text-sm font-bold hover:text-amber-800 transition">點擊查看答案</summary>
+                            <div class="mt-3 text-sm text-gray-700 space-y-2 pl-4 border-l-2 border-amber-300">
+                                <ul class="list-disc pl-4">
+                                    <li><strong>蟻走熱鍋：</strong>喻慌亂無措。</li>
+                                    <li><strong>兩腳圈豚繩索絆：</strong>喻動彈不得。</li>
+                                    <li><strong>如逢虎狼如觸蝎：</strong>喻驚恐程度極深。</li>
+                                </ul>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. 第四段: 劫後餘生 -->
+            <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+                <div class="bg-blue-600 text-white px-8 py-4 font-bold flex items-center justify-between">
+                    <span>【四】 劫後餘生的感受</span>
+                </div>
+                <div class="p-8 space-y-8">
+                    <!-- Original -->
+                    <div class="serif text-center md:text-left">
+                        <div class="poem-line"><span class="tooltip">少選<span class="tooltiptext">一會兒，不久。</span></span>聲停地始平，相顧人人成土色。</div>
+                        <div class="poem-line">地平踏穩相欣告，眾口一時同喧噪。</div>
+                        <div class="poem-line">老者無策少者疑，從此夜眠心不怡。</div>
+                        <div class="poem-line">東南雖缺地無縫，豈有妖物<span class="tooltip">簧鼓<span class="tooltiptext">用好聽的話蠱惑別人，此處有「妖物作怪」之意。</span></span>之。</div>
+                        <div class="poem-line">自是<span class="tooltip">乾坤<span class="tooltiptext">本是易經上的兩個卦名，後借稱天地。</span></span>氣吞吐，世人那得知其故。</div>
+                    </div>
+
+                    <!-- Translation -->
+                    <div>
+                        <h4 class="font-bold text-gray-700 mb-2 border-b inline-block border-gray-300">白話解讀</h4>
+                        <div class="translation-text">
+                            <p>過了片刻，震動的聲響終於停息，大地也漸漸恢復平穩。人們面面相覷，個個臉色蒼白，如同泥土一般毫無血色。</p>
+                            <p>等到地面完全平穩，大家試探著踩踏確認安全後，才互相欣喜地告知彼此無恙。瞬間，驚魂未定的人群紛紛開口議論，場面變得喧囂熱鬧。</p>
+                            <p>年長者茫然無策，不知該如何應對；年輕人雖有疑惑，卻同樣憂心忡忡。從此以後，每當夜晚來臨，人們的心情便再也無法安寧，總是帶著恐懼入睡。</p>
+                            <p>雖然東南方向的地勢出現了缺口，但大地終究沒有裂開縫隙，又怎會真有妖怪在作祟興風作浪呢？</p>
+                            <p>這不過是天地間的氣息運行、吞吐變化罷了，然而世間之人，又怎能真正理解這其中的奧秘呢？</p>
+                        </div>
+                    </div>
+
+                    <!-- Analysis Grid -->
+                    <div class="bg-gray-50 p-5 rounded-lg">
+                        <h5 class="font-bold text-gray-800 mb-3"><span class="analysis-tag tag-structure">章法</span>情境轉換</h5>
+                        <p class="text-sm text-gray-600 mb-4">以「少選」（即稍旋、片刻）再次轉換情境，寫動亂稍平之後，憂慮未定，又轉為茫然。</p>
+                        
+                        <div class="border-t border-gray-200 pt-3">
+                            <h5 class="font-bold text-gray-800 mb-2"><span class="analysis-tag tag-rhetoric">修辭</span>重點修辭</h5>
+                            <ul class="text-sm text-gray-600">
+                                <li><strong>映襯：</strong>「踏穩」—「喧噪」</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Interactive Question -->
+                    <div class="bg-amber-50 p-5 rounded-lg border border-amber-100">
+                        <h5 class="font-bold text-amber-800 mb-3"><i class="fa-solid fa-circle-question mr-2"></i>問題思考：地震發生的原因？</h5>
+                        <details class="group">
+                            <summary class="cursor-pointer text-amber-600 text-sm font-bold hover:text-amber-800 transition">點擊查看答案</summary>
+                            <div class="mt-3 text-sm text-gray-700 pl-4 border-l-2 border-amber-300">
+                                <p>詩人解釋這是「乾坤吐氣」，是老天爺的旨意（天地氣機運行），否定了妖物作怪的說法。</p>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. 第五段: 感懷 -->
+            <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+                <div class="bg-amber-600 text-white px-8 py-4 font-bold flex items-center justify-between">
+                    <span>【五】 感懷（同理感受）</span>
+                </div>
+                <div class="p-8 space-y-8">
+                    <!-- Original -->
+                    <div class="serif text-center md:text-left">
+                        <div class="poem-line">幸哉淡水尚安全，可憐嘉彰成墟墓。</div>
+                        <div class="poem-line">試問既震何重輕，消息茫茫歸劫數。</div>
+                        <div class="poem-line">長歌賦罷心轉愁，驚魂未定筆亦柔。</div>
+                        <div class="poem-line">此情回首不堪憶，此身猶自隨沉浮。</div>
+                        <div class="poem-line">安得<span class="tooltip">長房縮地法<span class="tooltiptext">語出晉葛洪《神仙傳·壺公》，傳說東漢費長房有神仙之術，練有能遁行於千里的縮地術。</span></span>，居吾樂土免煩憂。</div>
+                    </div>
+
+                    <!-- Translation -->
+                    <div>
+                        <h4 class="font-bold text-gray-700 mb-2 border-b inline-block border-gray-300">白話解讀</h4>
+                        <div class="translation-text">
+                            <p>慶幸的是，淡水地區仍然安然無恙；但可憐嘉義、彰化一帶，卻已成為斷垣殘壁，宛如墳墓般的廢墟。</p>
+                            <p>試問這場地震過後，還能如何分辨它的輕重程度呢？消息渺茫，生死禍福似乎皆是命運的安排，無法逆轉。</p>
+                            <p>長篇哀歌吟誦完畢，內心卻更加憂愁；驚魂未定，即使提筆寫下這一切，筆勢也顯得無力而顫抖。</p>
+                            <p>回首這場劫難，實在是不堪回憶；而我自己，彷彿仍在這天地變幻之中浮沉，心緒難以平靜。</p>
+                            <p>若是能有那種傳說中「長房縮地」的神奇法術，把家安置在一片永遠安樂的土地上，那該有多好？如此一來，便能遠離災禍，無須再為這些憂患煩惱了。</p>
+                        </div>
+                    </div>
+
+                    <!-- Analysis Grid -->
+                    <div class="bg-gray-50 p-5 rounded-lg">
+                        <h5 class="font-bold text-gray-800 mb-3"><span class="analysis-tag tag-content">賞析</span>悲天憫人</h5>
+                        <p class="text-sm text-gray-600 mb-4">本段一則為淡水廳一帶的倖存者感到慶幸，一則為嘉義彰化地區的罹難者哀悼。詩人驚魂之餘，除了用筆記錄災難，更希望能學會長房縮地法，幫助人們迅速逃離，找到無災無難的樂土。</p>
+
+                        <h5 class="font-bold text-gray-800 mb-3"><span class="analysis-tag tag-structure">章法</span>無奈的企求</h5>
+                        <p class="text-sm text-gray-600 mb-4">最後以「安得長房縮地法，居吾樂土免煩憂」作結束，但這只是了無希望的企求，無奈的情緒仍然在「長歌賦罷」之後悠然不絕。</p>
+                        
+                        <div class="border-t border-gray-200 pt-3">
+                            <h5 class="font-bold text-gray-800 mb-2"><span class="analysis-tag tag-rhetoric">修辭</span>重點修辭</h5>
+                            <ul class="text-sm text-gray-600">
+                                <li><strong>映襯：</strong>「幸哉」—「可憐」</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SECTION 3: 測驗與討論 -->
+        <div id="content-quiz" class="hidden-content space-y-8 animate-fade-in">
+            <!-- (Quiz content preserved from previous versions) -->
+            <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+                <h3 class="text-2xl font-bold mb-8 serif flex items-center">
+                    <i class="fa-solid fa-graduation-cap mr-3 text-orange-600"></i>
+                    詩作類型分析測驗
+                </h3>
+
+                <div class="grid gap-6">
+                    <!-- Q1 -->
+                    <div class="p-6 rounded-2xl border border-gray-100 bg-slate-50 hover:border-orange-200 transition-all">
+                        <div class="mb-4">
+                            <span class="text-xs font-bold bg-orange-100 text-orange-600 px-2 py-1 rounded mb-2 inline-block">題目一</span>
+                            <p class="text-lg serif font-bold">「鐵骨霜姿見畫圖，南枝蒨茂北枝孤。此梅氣運余相似，一半花開一半枯。」</p>
+                        </div>
+                        <div class="flex flex-wrap gap-4">
+                            <button onclick="check(this, true, '解析：此為〈古梅〉一詩，藉梅花的半枯半榮來比喻自己坎坷的身世氣運，屬於「詠物」類型。')" class="px-6 py-2 bg-white rounded-lg border hover:bg-orange-50 transition">詠物</button>
+                            <button onclick="check(this, false, '不正確喔，請注意詩中對「梅花」的細膩描寫。')" class="px-6 py-2 bg-white rounded-lg border hover:bg-orange-50 transition">遊覽</button>
+                            <button onclick="check(this, false, '雖然有感懷，但核心是梅花的姿態。')" class="px-6 py-2 bg-white rounded-lg border hover:bg-orange-50 transition">興懷</button>
+                        </div>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="p-6 rounded-2xl border border-gray-100 bg-slate-50 hover:border-orange-200 transition-all">
+                        <div class="mb-4">
+                            <span class="text-xs font-bold bg-orange-100 text-orange-600 px-2 py-1 rounded mb-2 inline-block">題目二</span>
+                            <p class="text-lg serif font-bold">「......菊部欣聆薊苑歌，梨園飽看羅門舞。泰山高兮祖帳設，蘆溝橋水添嗚咽。......」</p>
+                        </div>
+                        <div class="flex flex-wrap gap-4">
+                            <button onclick="check(this, false, '這裡並非在描寫私人園林美景。')" class="px-6 py-2 bg-white rounded-lg border hover:bg-orange-50 transition">園林</button>
+                            <button onclick="check(this, true, '解析：此為〈悲歌行〉，描寫北京梨園盛景與家國變遷的感慨，屬於「敘事/興懷」類型。')" class="px-6 py-2 bg-white rounded-lg border hover:bg-orange-50 transition">敘事/興懷</button>
+                            <button onclick="check(this, false, '蘆溝橋在詩中是政治或時事的意象。')" class="px-6 py-2 bg-white rounded-lg border hover:bg-orange-50 transition">題壁</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="feedback-area" class="mt-8 p-6 rounded-2xl bg-orange-100 text-orange-900 hidden">
+                    <i class="fa-solid fa-lightbulb mr-2"></i> <span id="feedback-text"></span>
+                </div>
+            </div>
+
+            <!-- Synthesis Discussion -->
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-indigo-600 text-white p-6 rounded-2xl shadow-lg md:col-span-1">
+                    <h4 class="font-bold text-xl mb-4 serif">文本總結</h4>
+                    <p class="text-sm opacity-90 leading-relaxed">
+                        〈地震歌〉不僅記錄了兩次大地震的慘烈景象，更透過五感摹寫（如籠篩、金甑碎、蟻走熱鍋）與極富想像力的典故（縮地法），展現了林占梅作為士紳詩人對生民疾苦的關懷。
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 md:col-span-2">
+                    <h4 class="font-bold text-lg mb-4 text-gray-800">延伸思考題</h4>
+                    <ul class="space-y-4 text-sm text-gray-600">
+                        <li class="flex gap-3">
+                            <i class="fa-solid fa-quote-left text-gray-300"></i>
+                            <span>講義提到此詩是「台灣災難文學的典型」。你認為其「典型」之處在於描寫的真實性，還是作者呈現出的科學觀察（氣吞吐說）？</span>
+                        </li>
+                        <li class="flex gap-3 border-t pt-4">
+                            <i class="fa-solid fa-quote-left text-gray-300"></i>
+                            <span>若林占梅生活在今日，他會如何運用現代科技與社群媒體來傳達「以歌當哭」的防災關懷？</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 py-10 mt-12">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <div class="flex justify-center gap-6 mb-4 text-gray-400">
+                <i class="fa-solid fa-book-bookmark"></i>
+                <i class="fa-solid fa-scroll"></i>
+                <i class="fa-solid fa-pen-nib"></i>
+            </div>
+            <p class="text-sm text-gray-500">來源參考：〈地震歌有序〉課程講義 (修改版) & 林占梅詩作略論簡報</p>
+            <p class="text-xs text-gray-400 mt-2">© 2024 數位文學互動平台</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchTab(tabId) {
+            document.getElementById('content-author').classList.add('hidden-content');
+            document.getElementById('content-poem').classList.add('hidden-content');
+            document.getElementById('content-quiz').classList.add('hidden-content');
+            
+            document.getElementById('content-' + tabId).classList.remove('hidden-content');
+
+            const tabMap = { 'author': 'nav-author', 'poem': 'nav-poem', 'quiz': 'nav-quiz' };
+            Object.keys(tabMap).forEach(key => {
+                const el = document.getElementById(tabMap[key]);
+                if (key === tabId) {
+                    el.className = 'tab-active px-2 py-6 text-sm transition-all duration-200';
+                } else {
+                    el.className = 'tab-inactive px-2 py-6 text-sm transition-all duration-200';
+                }
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function check(btn, isCorrect, msg) {
+            const area = document.getElementById('feedback-area');
+            const text = document.getElementById('feedback-text');
+            
+            area.classList.remove('hidden', 'bg-green-100', 'bg-red-100', 'text-green-900', 'text-red-900');
+            
+            if (isCorrect) {
+                area.classList.add('bg-green-100', 'text-green-900');
+                text.innerHTML = "<strong>答對了！</strong> " + msg;
+            } else {
+                area.classList.add('bg-red-100', 'text-red-900');
+                text.innerHTML = "<strong>再想想：</strong> " + msg;
+            }
+            area.classList.add('animate-fade-in');
+        }
+    </script>
+</body>
+</html>
